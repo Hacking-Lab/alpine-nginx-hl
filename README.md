@@ -1,4 +1,4 @@
-# alpine-nginx-hl-hl
+# alpine-nginx-hl
 Alpine NGINX based on alpine-base-hl
 
 ## Document Root
