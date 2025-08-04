@@ -34,3 +34,13 @@ chmod -R 644 /etc/logrotate.d
 
 # permissions /opt/www
 chown -R $HL_USER_USERNAME:$HL_USER_USERNAME /opt/www
+
+# create /opt/www 
+[ -d /opt/www ] || mkdir -p /opt/www
+
+if [ -n "$HL_USER_USERNAME" ]; then
+	chown -R $HL_USER_USERNAME:$HL_USER_USERNAME /opt/www
+	printf "%s:%s\n" "$HL_USER_USERNAME" "$(openssl passwd -apr1 "$HL_USER_PASSWORD")" > /opt/www/.htpasswd
+fi
+
+

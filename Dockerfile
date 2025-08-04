@@ -7,6 +7,7 @@ ADD root /
 RUN apk add --no-cache --update nginx \
         vim \
         nginx \
+	apache2-utils \
         openssl && \
 	rm -rf /var/cache/apk/* && \
 	chown -R nginx:www-data /var/lib/nginx && \
@@ -14,5 +15,4 @@ RUN apk add --no-cache --update nginx \
 
 # Expose the ports for nginx
 EXPOSE 80
-
 
