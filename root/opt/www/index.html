@@ -1,38 +1,86 @@
-<!doctype html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Edit your site info here -->
-    <meta name="description" content="Alpine Linux NGINX Web Server">
-    <title>Alpine Linux NGINX Web Server</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2/webcomponents-loader.min.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/src/zero-md.min.js"></script>
-
-    <style>
-      /* Edit your header styles here */
-      header { font-family: sans-serif; font-size: 20px; text-align: center; position: fixed; width: 100%; line-height: 42px; top: 0; left: 0; background-color: #424242; color: white; }
-      body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 56px auto 0 auto; padding: 45px; }
-      @media (max-width: 767px) {
-        header { font-size: 15px; }
-        body { padding: 15px; }
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hacking-Lab</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏴‍☠️</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'] },
+          colors: { neon: '#00F5FF' },
+          boxShadow: { neon: '0 0 10px rgba(0,245,255,.6), 0 0 30px rgba(0,245,255,.35)' },
+          keyframes: {
+            glow: { '0%,100%': { textShadow: '0 0 8px rgba(0,245,255,.8)' }, '50%': { textShadow: '0 0 16px rgba(0,245,255,1)' } },
+            scan: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(100%)' } }
+          },
+          animation: { glow: 'glow 3s ease-in-out infinite', scan: 'scan 6s linear infinite' }
+        }
       }
-    </style>
-  </head>
-  <body>
+    }
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+  <style>
+    .grid-bg {
+      background:
+        radial-gradient(ellipse at 50% -20%, rgba(0,245,255,.45), rgba(0,0,0,0) 60%),
+        linear-gradient(rgba(0,245,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,.08) 1px, transparent 1px);
+      background-size: 100% 100%, 40px 40px, 40px 40px;
+    }
+    .scanline::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,255,255,.08) 50%, transparent 100%);
+      mix-blend-mode: screen; pointer-events:none; animation: scan 9s linear infinite;
+    }
+    /* hover color for brand */
+    .brand-link { transition: color .15s ease, text-shadow .15s ease; display:inline-flex; align-items:center; gap:.25rem; }
+    .brand-link .text-neon { color: #00F5FF; transition: color .15s ease, text-shadow .15s ease; }
+    .brand-link:hover .text-neon { color: #D0FF00; text-shadow: 0 0 10px rgba(208,255,0,.7), 0 0 30px rgba(208,255,0,.35); }
+  </style>
+</head>
+<body class="min-h-screen grid-bg text-base-200 relative">
 
-    <!-- Edit your Markdown URL file location here -->
-    <zero-md src="Readme.md"></zero-md>
+  <header class="sticky top-0 z-50 backdrop-blur bg-base-100/70 border-b border-cyan-900/40">
+    <div class="navbar max-w-7xl mx-auto">
+      <div class="flex-1">
+        <a href="https://www.hacking-lab.com/" target="_blank" rel="noopener" class="btn btn-ghost normal-case text-xl font-display tracking-tight brand-link" aria-label="Hacking-Lab homepage">
+          <span class="text-neon animate-glow">Hacking-Lab</span><span class="opacity-70"></span>
+        </a>
+      </div>
+    </div>
+  </header>
 
-    <!-- Edit your header title here -->
-    <header class="header">Alpine Linux NGINX Web Server</header>
+  <section class="relative overflow-hidden scanline">
+    <div class="absolute inset-0 pointer-events-none opacity-25 [background-image:radial-gradient(circle_at_50%_50%,rgba(0,245,255,.25),transparent_50%)]"></div>
+    <div class="max-w-7xl mx-auto px-4 py-20 flex justify-center">
+      <div class="relative w-full max-w-lg">
+        <div class="mockup-code text-sm">
+          <pre data-prefix="$"><code>what is this?</code></pre>
+          <pre data-prefix=">" class="text-success"><code>Found: Hacking-Lab nginx docker</code></pre>
+          <pre data-prefix="$"><code>where is the Document Root</code></pre>
+          <pre data-prefix=">" class="text-warning"><code>DocumentRoot: /opt/www</code></pre>
+          <pre data-prefix="$"><code>source code</code></pre>
+          <pre data-prefix=">" class="text-accent"><code>https://github.com/Hacking-Lab/alpine-nginx-hl</code></pre>
+        </div>
+        <div class="absolute -inset-2 -z-10 blur-2xl opacity-40 bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-emerald-500 rounded-3xl"></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Edit your Github ribbon here (https://github.com/blog/273-github-ribbons) -->
-    <a href="https://github.com/Hacking-Lab/alpine-nginx-hl"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+  <footer class="mt-16 border-t border-cyan-900/40">
+    <div class="max-w-7xl mx-auto px-4 py-8 text-sm opacity-80 text-center">
+      <p>&copy; <span id="year"></span> Hacking-Lab</p>
+    </div>
+  </footer>
 
-
-  </body>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
+
