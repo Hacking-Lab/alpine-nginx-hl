@@ -1,0 +1,5 @@
+#!/command/execlineb -P
+with-contenv
+s6-setuidgid root
+nginx -c /config/nginx/nginx.conf
+

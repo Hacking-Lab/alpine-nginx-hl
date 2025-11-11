@@ -1,4 +1,4 @@
-#!/command/with-contenv bash
+#!/bin/bash
 
 source /etc/hluser
 
