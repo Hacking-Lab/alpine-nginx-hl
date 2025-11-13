@@ -1,86 +1,264 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="night">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hacking-Lab</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏴‍☠️</text></svg>">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { display: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'] },
-          colors: { neon: '#00F5FF' },
-          boxShadow: { neon: '0 0 10px rgba(0,245,255,.6), 0 0 30px rgba(0,245,255,.35)' },
-          keyframes: {
-            glow: { '0%,100%': { textShadow: '0 0 8px rgba(0,245,255,.8)' }, '50%': { textShadow: '0 0 16px rgba(0,245,255,1)' } },
-            scan: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(100%)' } }
-          },
-          animation: { glow: 'glow 3s ease-in-out infinite', scan: 'scan 6s linear infinite' }
-        }
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #e5f5ff;
+      overflow-x: hidden; /* nur horizontal verhindern */
+    }
+
+    /* Weltkarte im Hintergrund */
+    body {
+      background:
+        linear-gradient(135deg, rgba(0,0,0,0.85), rgba(0,20,40,0.95)),
+        url("background.svg") center/cover no-repeat fixed;
+    }
+
+    /* Overlay: mobile-first – oben Start, mit Scroll möglich */
+    .overlay {
+      min-height: 100vh;
+      width: 100%;
+      background: radial-gradient(circle at 50% 10%, rgba(0,255,255,0.16), transparent 55%);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 4.5rem 1rem 2rem; /* Platz für Brand + etwas Luft */
+    }
+
+    /* Brand / Hacking-Lab Link oben links */
+    .brand {
+      position: fixed;
+      top: 1.2rem;
+      left: 1.2rem;
+      font-size: 1.25rem;
+      letter-spacing: 0.04em;
+      display: inline-flex;
+      align-items: baseline;
+      gap: .25rem;
+      text-decoration: none;
+      color: #00f5ff;
+      text-shadow: 0 0 8px rgba(0,245,255,.8);
+      transition: color .15s ease, text-shadow .15s ease, transform .15s ease;
+      z-index: 10;
+    }
+
+    .brand span.hl {
+      font-weight: 700;
+    }
+
+    .brand span.ctf {
+      opacity: .7;
+      font-weight: 500;
+    }
+
+    .brand:hover,
+    .brand:focus-visible {
+      color: #d0ff00;
+      text-shadow: 0 0 10px rgba(208,255,0,.8), 0 0 30px rgba(208,255,0,.6);
+      transform: translateY(-1px);
+    }
+
+    /* zentriertes Panel */
+    .terminal {
+      max-width: 720px;
+      width: 100%;
+      background: rgba(3, 10, 20, 0.9);
+      border-radius: 14px;
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      box-shadow:
+        0 0 25px rgba(0, 255, 255, 0.35),
+        0 0 80px rgba(0, 0, 0, 0.9);
+      padding: 1.5rem 1.5rem 1.75rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .9rem;
+      color: #8ab4ff;
+    }
+
+    .dots {
+      display: flex;
+      gap: .35rem;
+    }
+
+    .dot {
+      width: .7rem;
+      height: .7rem;
+      border-radius: 999px;
+      background: #ff5f57;
+      box-shadow: 0 0 6px rgba(0,0,0,.5);
+    }
+
+    .dot:nth-child(2) {
+      background: #febc2e;
+    }
+
+    .dot:nth-child(3) {
+      background: #28c840;
+    }
+
+    .terminal-title {
+      opacity: .8;
+    }
+
+    .terminal-body {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .9rem;
+      line-height: 1.5;
+      color: #c8e6ff;
+    }
+
+    .prompt {
+      color: #4afc75;
+    }
+
+    .output-success {
+      color: #8cffc8;
+    }
+
+    .output-warn {
+      color: #ffd27f;
+    }
+
+    .output-flag {
+      color: #00f5ff;
+      text-shadow: 0 0 8px rgba(0,245,255,.7);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: .55em;
+      background: #4afc75;
+      margin-left: .1em;
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+
+    .subline {
+      margin-top: 1rem;
+      font-size: .8rem;
+      color: rgba(200, 230, 255, 0.75);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .tag {
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .7rem;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0,255,255,.4);
+      color: #9be8ff;
+      background: rgba(0,20,40,0.7);
+    }
+
+    /* Mobile-first Tweaks */
+    @media (max-width: 600px) {
+      .terminal {
+        padding: 1.25rem 1rem 1.5rem;
+      }
+      .brand {
+        font-size: 1rem;
+        left: 1rem;
+      }
+      .terminal-body {
+        font-size: .85rem;
+      }
+      .subline {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
-  </script>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
-  <style>
-    .grid-bg {
-      background:
-        radial-gradient(ellipse at 50% -20%, rgba(0,245,255,.45), rgba(0,0,0,0) 60%),
-        linear-gradient(rgba(0,245,255,.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,245,255,.08) 1px, transparent 1px);
-      background-size: 100% 100%, 40px 40px, 40px 40px;
+
+    /* Desktop: wirklich mittig zentrieren */
+    @media (min-width: 768px) {
+      .overlay {
+        align-items: center;
+        padding: 2rem;
+      }
     }
-    .scanline::before{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(180deg, transparent 0%, rgba(0,255,255,.08) 50%, transparent 100%);
-      mix-blend-mode: screen; pointer-events:none; animation: scan 9s linear infinite;
-    }
-    /* hover color for brand */
-    .brand-link { transition: color .15s ease, text-shadow .15s ease; display:inline-flex; align-items:center; gap:.25rem; }
-    .brand-link .text-neon { color: #00F5FF; transition: color .15s ease, text-shadow .15s ease; }
-    .brand-link:hover .text-neon { color: #D0FF00; text-shadow: 0 0 10px rgba(208,255,0,.7), 0 0 30px rgba(208,255,0,.35); }
   </style>
 </head>
-<body class="min-h-screen grid-bg text-base-200 relative">
+<body>
+  <!-- Hacking-Lab Link -->
+  <a href="https://www.hacking-lab.com/" target="_blank" rel="noopener" class="brand">
+    <span class="hl">Hacking-Lab</span><span class="ctf"></span>
+  </a>
 
-  <header class="sticky top-0 z-50 backdrop-blur bg-base-100/70 border-b border-cyan-900/40">
-    <div class="navbar max-w-7xl mx-auto">
-      <div class="flex-1">
-        <a href="https://www.hacking-lab.com/" target="_blank" rel="noopener" class="btn btn-ghost normal-case text-xl font-display tracking-tight brand-link" aria-label="Hacking-Lab homepage">
-          <span class="text-neon animate-glow">Hacking-Lab</span><span class="opacity-70"></span>
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <section class="relative overflow-hidden scanline">
-    <div class="absolute inset-0 pointer-events-none opacity-25 [background-image:radial-gradient(circle_at_50%_50%,rgba(0,245,255,.25),transparent_50%)]"></div>
-    <div class="max-w-7xl mx-auto px-4 py-20 flex justify-center">
-      <div class="relative w-full max-w-lg">
-        <div class="mockup-code text-sm">
-          <pre data-prefix="$"><code>what is this?</code></pre>
-          <pre data-prefix=">" class="text-success"><code>Found: Hacking-Lab nginx docker</code></pre>
-          <pre data-prefix="$"><code>where is the Document Root</code></pre>
-          <pre data-prefix=">" class="text-warning"><code>DocumentRoot: /opt/www</code></pre>
-          <pre data-prefix="$"><code>source code</code></pre>
-          <pre data-prefix=">" class="text-accent"><code>https://github.com/Hacking-Lab/alpine-nginx-hl</code></pre>
+  <!-- zentriertes Panel -->
+  <div class="overlay">
+    <main class="terminal" aria-label="HL intro terminal">
+      <div class="terminal-header">
+        <div class="dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
         </div>
-        <div class="absolute -inset-2 -z-10 blur-2xl opacity-40 bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-emerald-500 rounded-3xl"></div>
+        <div class="terminal-title">Hacking-Lab</div>
+        <div></div>
       </div>
-    </div>
-  </section>
 
-  <footer class="mt-16 border-t border-cyan-900/40">
-    <div class="max-w-7xl mx-auto px-4 py-8 text-sm opacity-80 text-center">
-      <p>&copy; <span id="year"></span> Hacking-Lab</p>
-    </div>
-  </footer>
+      <div class="terminal-body">
+        <div>
+          <span class="prompt">hacker@hl</span>:<span style="color:#5f9bff;">~$</span>
+          <span> what is this?</span>
+        </div>
+        <div class="output-flag">
+          Found: Hacking-Lab nginx docker
+        </div>
+        <br />
+        <div>
+          <span class="prompt">hacker@hl</span>:<span style="color:#5f9bff;">~$</span>
+          <span> where is the Document Root</span>
+        </div>
+        <div class="output-flag">
+          DocumentRoot: /opt/www
+        </div>
+        <br />
+        <div>
+          <span class="prompt">hacker@hl</span>:<span style="color:#5f9bff;">~$</span>
+          <span> where is the source code</span>
+        </div>
+        <div class="output-flag">
+          https://github.com/Hacking-Lab/alpine-nginx-hl
+        </div>
+        <br />
+        <div>
+          <span class="prompt">hacker@hl</span>:<span style="color:#5f9bff;">~$</span><span class="cursor">&nbsp;</span>
+        </div>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+        <div class="subline">
+          <span>Welcome to the Hacking-Lab. Connect, enumerate, exploit, capture.</span>
+          <span class="tag">pentest · web · crypto · reversing · pwn · forensics · osint</span>
+        </div>
+      </div>
+    </main>
+  </div>
 </body>
 </html>
 
