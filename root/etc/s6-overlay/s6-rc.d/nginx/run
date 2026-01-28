@@ -1,5 +1,10 @@
 #!/command/execlineb -P
-with-contenv
-s6-setuidgid root
-nginx -c /config/nginx/nginx.conf
+fdmove -c 2 1
+
+foreground { echo "testing nginx config" }
+foreground { /usr/sbin/nginx -t -c /config/nginx/nginx.conf }
+
+foreground { echo "starting nginx" }
+exec /usr/sbin/nginx -c /config/nginx/nginx.conf
+
 
