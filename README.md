@@ -1,14 +1,24 @@
 # alpine-nginx-hl
 Alpine NGINX based on alpine-base-hl
+- static web server 
+- nginx 
+
+![Screenshot](./img/screenshot-nginx.png)
 
 ## Document Root
 * `/opt/www/`
 
-## s6 overlay framework
-* version 3
+## Docker Hub
+https://hub.docker.com/repository/docker/hackinglab/alpine-nginx-hl
 
-## Purpose
-* static web server
-* nginx
-
-
+```bash
+services:
+  alpine-nginx-hl:
+    build: .
+    image: hackinglab/alpine-nginx-hl:3.2
+    environment:
+    - AUTHOR=e1
+    - HL_USER_USERNAME=hacker
+    ports:
+      - 80:80
+```
