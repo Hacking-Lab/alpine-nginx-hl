@@ -1,9 +1,12 @@
 # alpine-nginx-hl
-Alpine NGINX based on alpine-base-hl
+Alpine NGINX 
 - static web server 
 - nginx 
 
 ![Screenshot](./img/screenshot-nginx.png)
+
+## Base Image
+https://github.com/Hacking-Lab/alpine-base-hl
 
 ## Document Root
 * `/opt/www/`
